@@ -1,0 +1,78 @@
+tosca_definitions_version: alien_dsl_2_0_0
+
+metadata:
+  template_name: org.alien4cloud.scheduling
+  template_version: .+
+  template_author: alien4cloud
+
+description: |
+  Types for Job Scheduling.
+
+imports:
+  - tosca-normative-types:1.0.0-ALIEN20
+  - alien-base-types: .+
+
+node_types:
+
+  org.alien4cloud.scheduling.types.AbstractCronConfigurator:
+    abstract: true
+    derived_from: tosca.nodes.Root
+    description: |
+      Abstract type that install a job scheduled on a cron expression basis.
+    properties:
+      user:
+        type: string
+        description: |
+          The user that will run the command.
+        required: false
+      expression:
+        type: string
+        description: |
+          The cron expression.
+        required: true
+      command:
+        type: string
+        description: |
+          The command that will be executed.
+        required: true
+
+  org.alien4cloud.scheduling.types.CronConfigurator:
+    derived_from: org.alien4cloud.scheduling.types.AbstractCronConfigurator
+    description: |
+      A concrete type that install a job on the system crontab.
+    attributes:
+      taskid: { get_operation_output: [SELF, Standard, start, TASKID] }
+    interfaces:
+      Standard:
+        start:
+          inputs:
+            expression: { get_property: [SELF,expression] }
+            command: { get_property: [SELF,command] }
+            user: { get_property: [SELF,user] }
+          implementation: scripts/cron_add.sh
+        stop:
+          inputs:
+            taskid: { get_attribute: [SELF,taskid] }
+            user: { get_property: [SELF,user] }
+          implementation: scripts/cron_del.sh
+
+policy_types:
+
+  org.alien4cloud.scheduling.policies.CronScheduleWorkflowPolicy:
+    derived_from: org.alien4cloud.policies.ScheduleWorkflowPolicy
+    properties:
+      endpoint:
+        description: |
+          url of the alien4cloud instance.
+        type: string
+        required: true
+      username:
+        type: string
+        required: true
+      password:
+        type: string
+        required: true
+    metadata:
+      # pluginId:pluginBean:phase
+      a4c_policy_impl: alien4cloud-workflow-plugin:cron-modifier:post-policy-match
+

@@ -1,0 +1,11 @@
+id: alien4cloud-workflow-plugin
+name: scheduler topology processing plugin
+version: ${project.version}
+description: >
+  This plugin contains topology modifiers to transform a generic
+configuration_class: org.alien4cloud.plugin.scheduler.PluginConfiguration
+component_descriptors:
+  - bean_name: cron-modifier
+    name: Cron modifier.
+    description: >
+      Modifier that add a cron configurator.
