@@ -6,7 +6,7 @@ import alien4cloud.utils.PropertyUtil;
 import lombok.extern.java.Log;
 import org.alien4cloud.alm.deployment.configuration.flow.FlowExecutionContext;
 import org.alien4cloud.alm.deployment.configuration.flow.TopologyModifierSupport;
-import org.alien4cloud.tosca.model.Csar;
+
 import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
 import org.alien4cloud.tosca.model.definitions.ScalarPropertyValue;
 import org.alien4cloud.tosca.model.templates.NodeTemplate;
@@ -22,10 +22,10 @@ import static alien4cloud.utils.AlienUtils.safe;
 import static org.alien4cloud.plugin.scheduler.policies.SchedulerPoliciesConstants.SCHEDULER_POLICIES_CRON;
 import static org.alien4cloud.plugin.scheduler.csar.Version.SCHEDULER_CSAR_VERSION;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -36,7 +36,7 @@ public class CronTopologyModifier extends TopologyModifierSupport {
     /**
      * Name
      */
-    public static final String A4C_CRON_MODIFIER_TAG = "a4c_cron-modifier";
+    private static final String A4C_CRON_MODIFIER_TAG = "a4c_cron-modifier";
 
     /**
      * Configurator to use
@@ -89,13 +89,14 @@ public class CronTopologyModifier extends TopologyModifierSupport {
     private void doProcess(Topology topology, FlowExecutionContext context) {
         int id = 1;
 
-        //
+        Collection<NodeTemplate> nodes = safe(topology.getNodeTemplates()).values();
+
         Set<PolicyTemplate> policies = TopologyNavigationUtil.getPoliciesOfType(topology, SCHEDULER_POLICIES_CRON, true);
 
-        Map<String,MutableInt> dependencyMap = topology.getNodeTemplates().values().stream()
+        Map<String,MutableInt> dependencyMap = nodes.stream()
                 .collect(Collectors.toMap(NodeTemplate::getName,(e) -> new MutableInt(0)));
 
-        for (NodeTemplate node : topology.getNodeTemplates().values()) {
+        for (NodeTemplate node : nodes) {
             for (RelationshipTemplate relation : safe(node.getRelationships()).values()) {
                 if (relation.getType().equals(NormativeRelationshipConstants.DEPENDS_ON)) {
                     dependencyMap.get(relation.getTarget()).increment();
@@ -105,7 +106,7 @@ public class CronTopologyModifier extends TopologyModifierSupport {
 
         List<String> targetToAdd = dependencyMap.entrySet().stream()
                 .filter(e -> e.getValue().intValue() == 0)
-                .map( e -> e.getKey())
+                .map( Map.Entry<String,MutableInt>::getKey)
                 .collect(Collectors.toList());
 
         for (PolicyTemplate policy : policies) {
