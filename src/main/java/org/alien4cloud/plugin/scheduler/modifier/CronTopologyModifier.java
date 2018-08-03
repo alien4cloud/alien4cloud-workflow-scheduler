@@ -98,9 +98,7 @@ public class CronTopologyModifier extends TopologyModifierSupport {
 
         for (NodeTemplate node : nodes) {
             for (RelationshipTemplate relation : safe(node.getRelationships()).values()) {
-                if (relation.getType().equals(NormativeRelationshipConstants.DEPENDS_ON)) {
                     dependencyMap.get(relation.getTarget()).increment();
-                }
             }
         }
 
@@ -113,10 +111,12 @@ public class CronTopologyModifier extends TopologyModifierSupport {
             //String nodeName = String.format("%s_%s",policy.getName(), UUID.randomUUID().toString().replaceAll("-","_"));
             String nodeName = String.format("%s_%d",policy.getName(), id++);
             String cronExpression = PropertyUtil.getScalarValue(policy.getProperties().get("cron_expression"));
+            String cronId = nodeName + "-" + context.getEnvironmentContext().get().getEnvironment().getId();
 
             NodeTemplate node = addNodeTemplate(null,topology,nodeName, CRON_CONFIGURATOR, SCHEDULER_CSAR_VERSION);
             setNodePropertyPathValue(null,topology,node,"command",buildCommand(policy,context));
             setNodePropertyPathValue(null,topology,node,"expression",new ScalarPropertyValue(cronExpression));
+            setNodePropertyPathValue(null,topology,node,"cronid",new ScalarPropertyValue(cronId));
 
             for (String targetNodeName : targetToAdd) {
                 //NodeTemplate sourceNode = topology.getNodeTemplates().get(sourceNodeName);

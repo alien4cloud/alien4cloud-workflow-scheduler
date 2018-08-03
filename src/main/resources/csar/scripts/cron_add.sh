@@ -1,23 +1,10 @@
 #!/bin/bash
 
-# ID Generation
-genid() {
-  local id=0
-  if [ -f $HOME/.cron.id ]; then
-    id=$(< $HOME/.cron.id)
-    id=$(expr $id + 1);
-  fi
-  echo $id > $HOME/.cron.id
-  return $id
-}
+echo ${cronid} >> ENV
 
 # Ensure exclusive access
 exec 200> $HOME/.cron.lock || exit 1
 flock 200 || exit 1
-
-# Generate TASK ID
-genid
-export TASKID="TASK-$?"
 
 # Create the modification script
 SCRIPT=$(mktemp --tmpdir cronedit.XXXXXXXX.sh)
@@ -26,7 +13,7 @@ cat <<EOF > $SCRIPT
 #!/bin/bash
 TMP=\$(mktemp --tmpdir crontab.XXXXXXXX)
 crontab -l > \$TMP
-echo '${expression} ${command} # [$TASKID]' >> \$TMP
+echo '${expression} ${command} # <$cronid>' >> \$TMP
 crontab \$TMP
 CR=\$?
 rm \$TMP

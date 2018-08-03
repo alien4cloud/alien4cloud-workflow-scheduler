@@ -40,19 +40,24 @@ node_types:
     derived_from: org.alien4cloud.scheduling.types.AbstractCronConfigurator
     description: |
       A concrete type that install a job on the system crontab.
-    attributes:
-      taskid: { get_operation_output: [SELF, Standard, start, TASKID] }
+    properties:
+      cronid:
+        type: string
+        description: |
+          The ID of the cron job.
+        required: true
     interfaces:
       Standard:
         start:
           inputs:
+            cronid: { get_property: [SELF,cronid] }
             expression: { get_property: [SELF,expression] }
             command: { get_property: [SELF,command] }
             user: { get_property: [SELF,user] }
           implementation: scripts/cron_add.sh
         stop:
           inputs:
-            taskid: { get_attribute: [SELF,taskid] }
+            cronid: { get_property: [SELF,cronid] }
             user: { get_property: [SELF,user] }
           implementation: scripts/cron_del.sh
 

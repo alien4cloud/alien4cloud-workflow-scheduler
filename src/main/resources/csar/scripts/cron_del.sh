@@ -10,7 +10,7 @@ SCRIPT=$(mktemp --tmpdir cronedit.XXXXXXXX.sh)
 cat <<EOF > $SCRIPT
 #!/bin/bash
 TMP=\$(mktemp --tmpdir crontab.XXXXXXXX)
-crontab -l | grep -v "# [$taskid]$" > \$TMP
+crontab -l | grep -v "# <${cronid}>" > \$TMP
 crontab \$TMP
 CR=\$?
 rm \$TMP
