@@ -108,7 +108,6 @@ public class CronTopologyModifier extends TopologyModifierSupport {
                 .collect(Collectors.toList());
 
         for (PolicyTemplate policy : policies) {
-            //String nodeName = String.format("%s_%s",policy.getName(), UUID.randomUUID().toString().replaceAll("-","_"));
             String nodeName = String.format("%s_%d",policy.getName(), id++);
             String cronExpression = PropertyUtil.getScalarValue(policy.getProperties().get("cron_expression"));
             String cronId = nodeName + "-" + context.getEnvironmentContext().get().getEnvironment().getId();

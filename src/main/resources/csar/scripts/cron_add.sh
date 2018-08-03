@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo ${cronid} >> ENV
-
 # Ensure exclusive access
 exec 200> $HOME/.cron.lock || exit 1
 flock 200 || exit 1
