@@ -79,5 +79,5 @@ policy_types:
         required: true
     metadata:
       # pluginId:pluginBean:phase
-      a4c_policy_impl: alien4cloud-workflow-plugin:cron-modifier:post-policy-match
+      a4c_policy_impl: alien4cloud-workflow-scheduler-plugin:cron-modifier:post-policy-match
 

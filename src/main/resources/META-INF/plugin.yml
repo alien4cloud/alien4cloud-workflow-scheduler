@@ -1,4 +1,4 @@
-id: alien4cloud-workflow-plugin
+id: alien4cloud-workflow-scheduler-plugin
 name: scheduler topology processing plugin
 version: ${project.version}
 description: >
