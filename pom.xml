@@ -17,6 +17,10 @@
     </repository>
   </repositories>
 
+  <scm>
+    <connection>scm:git:https://github.com/alien4cloud/alien4cloud-workflow-scheduler.git</connection>
+  </scm>
+
   <distributionManagement>
     <repository>
       <id>repo.opensource.fastconnect.org</id>
@@ -27,7 +31,7 @@
       <url>https://fastconnect.org/maven/content/repositories/opensource-snapshot</url>
     </snapshotRepository>
   </distributionManagement>
-  
+
   <properties>
     <!-- Java coverage configuration -->
     <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>

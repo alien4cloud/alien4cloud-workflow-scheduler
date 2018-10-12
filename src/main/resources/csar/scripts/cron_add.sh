@@ -19,6 +19,11 @@ exit \$CR
 EOF
 chmod 755 $SCRIPT
 
+echo "Will try to install cron tab using the following file:"
+echo "------------------------------------------------------"
+cat $SCRIPT
+echo "------------------------------------------------------"
+
 # Now running it
 if [ -v ${user} ]; then
 	$SCRIPT
