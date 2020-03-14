@@ -2,7 +2,8 @@ tosca_definitions_version: alien_dsl_2_0_0
 
 metadata:
   template_name: org.alien4cloud.scheduling
-  template_version: .+
+  # Will be replaced with mvn property org.alien4cloud.scheduling.version during build
+  template_version: 3.0
   template_author: alien4cloud
 
 description: |
@@ -10,7 +11,7 @@ description: |
 
 imports:
   - tosca-normative-types:1.0.0-ALIEN20
-  - alien-base-types: .+
+  - alien-base-types:3.0
 
 node_types:
 
