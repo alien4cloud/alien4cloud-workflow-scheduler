@@ -33,7 +33,7 @@
   </distributionManagement>
 
   <properties>
-    <org.alien4cloud.scheduling.version>3.0</org.alien4cloud.scheduling.version>
+    <org.alien4cloud.scheduling.version>3.0.0</org.alien4cloud.scheduling.version>
 
     <!-- Java coverage configuration -->
     <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
